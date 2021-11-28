@@ -1,19 +1,15 @@
 //
-//  ViewController.swift
+//  QuizBrain.swift
 //  Quizzler-iOS13
 //
-//  Created by Angela Yu on 12/07/2019.
-//  Copyright © 2019 The App Brewery. All rights reserved.
+//  Created by Cory Carte on 11/28/21.
+//  Copyright © 2021 The App Brewery. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class ViewController: UIViewController {
-    @IBOutlet weak var questionText: UILabel!
-    @IBOutlet weak var progressBar: UIProgressView!
-    @IBOutlet weak var trueButton: UIButton!
-    @IBOutlet weak var falseButton: UIButton!
-    
+
+struct QuizBrain {
     let quiz = [
         Question(q: "A slug's blood is green.", a: "True"),
         Question(q: "Approximately one quarter of human bones are in the feet.", a: "True"),
@@ -31,39 +27,27 @@ class ViewController: UIViewController {
     
     var currentQ = 0
     
-    func checkAnswer(_ userAnswer: String, _ expectedAnswer: String) -> Bool {
-        return userAnswer == expectedAnswer
+    func checkAnswer(_ userAnswer: String) -> Bool {
+        if userAnswer == quiz[currentQ].answer {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    func getQuestionText() -> String {
+        return quiz[currentQ].text
     }
     
-    @IBAction func answerGiven(_ sender: UIButton) {
-        // Verify answer
-        let userAnswer = sender.currentTitle!
-        let actualAnswer = quiz[currentQ].answer
-        
-        if checkAnswer(userAnswer, actualAnswer) {
-            print("Correct!")
-        } else {
-            print("Wrong...")
-        }
-        
-        // Display next question
-        if currentQ < (quiz.count - 1) {
+    func getProgress() -> Float {
+        return Float(currentQ + 1) / Float(quiz.count)
+    }
+    
+    mutating func nextQuestion() {
+        if currentQ + 1 < quiz.count {
             currentQ += 1
         } else {
             currentQ = 0
         }
-        
-        updateUI()
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        updateUI()
-    }
-
-    func updateUI() {
-        questionText.text = quiz[currentQ].text
     }
 }
-
